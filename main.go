@@ -10,6 +10,7 @@ import (
 )
 
 var (
+	// clear current line
 	line_clear string = "\r                                                                 "
 )
 
@@ -21,7 +22,7 @@ func wrkTimer(w, b int) {
 	tmr := "wrk" //sets timer for repeat if wanting to skip the next timer.
 
 	// ticker setup
-	wTick := time.NewTicker(1 * time.Second)
+	wTick := time.NewTicker(1 * time.Second) // need to change to min after testing
 	done := make(chan bool)
 
 	fmt.Printf(line_clear)
@@ -45,6 +46,7 @@ func wrkTimer(w, b int) {
 
 	time.Sleep(time.Duration(wrk) * time.Second)
 	wTick.Stop()
+	// closing chan
 	done <- true
 
 	nextTimer(tmr, wrk, brk)
@@ -55,7 +57,7 @@ func brkTimer(w, b int) {
 	brk := b
 	wrk := w
 	timer := "brk"
-	bTick := time.NewTicker(1 * time.Second)
+	bTick := time.NewTicker(1 * time.Second) //need to chang to min after testing
 	done := make(chan bool)
 
 	fmt.Printf(line_clear)
@@ -89,17 +91,15 @@ func nextTimer(t string, w, b int) {
 	brk := b
 	wrk := w
 
-	//var n int = 0
-	//reader := bufio.NewReader(os.Stdin)
 	fmt.Printf(line_clear)
 	fmt.Printf("\r> Cont or restart? y(es), n(o) or r(estart)")
-	//a, _ := reader.ReadString('\n')
 
 	a, _, err := keyboard.GetSingleKey()
 	if err != nil {
 		panic(err)
 	}
 
+	// timer order starting with work
 	if a == 'y' {
 		if tmr == "wrk" {
 			brkTimer(wrk, brk)
